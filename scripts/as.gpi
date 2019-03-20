@@ -14,5 +14,5 @@ set tics front
 set key below
 
 plot \
-  tsv using 1:($6+$7) title 'Stale' with filledcurves x1 lc rgb "#ff7700", \
-  tsv using 1:6 title 'Active' with filledcurves x1 lc rgb "#009999" \
+  tsv using 1:($4+$5) title 'Stale' with filledcurves x1 lc rgb "#ff7700", \
+  tsv using 1:4 title 'Active' with filledcurves x1 lc rgb "#009999" \

@@ -13,5 +13,5 @@ set xtics out
 set tics front
 set key below
 
-plot tsv using 1:5 title 'Lead time' \
+plot tsv using 1:7 title 'Lead time' \
   pointtype 7 pointsize 1

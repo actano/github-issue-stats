@@ -13,6 +13,6 @@ set xtics out
 set tics front
 set key below
 
-plot tsv using 1:4 title 'Lead time' with \
+plot tsv using 1:8 title 'Lead time' with \
   linespoints linecolor rgb "#337dff" linewidth 2 \
   pointtype 7 pointsize 1
