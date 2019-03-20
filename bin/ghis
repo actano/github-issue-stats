@@ -17,7 +17,8 @@ issues.timeline.each do |t|
   lts = t[1][:lead_time_sample]
   lead_time_sample_days = lts.nil? ? 'nan' : days(lts)
 
-  closed_issues = t[1][:closed_issues]
+  ci = t[1][:closed_issues]
+  closed_issues = ci.nil? ? 'nan' : ci
 
   active_tasks = t[2][:active]
   stale_tasks = t[2][:stale]

@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+#ruby -Ilib bin/ghisbt repos/actano/rplan-architecture/issues.json
+
+require 'ghis'
+
+def headline(issues)
+  result = "timestamp"
+  issues.lables.each do |lable|
+    result.concat("\t")
+    result.concat(lable.name)
+  end
+  return result
+end
+
+issues = Issues.new(ARGV[0])
+
+puts headline(issues)
+issues.timeline.each do |t|
+  puts "#{t[0].iso8601}"
+end
+

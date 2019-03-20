@@ -1,9 +1,19 @@
 require 'json'
 require 'time'
+require 'set'
 
 class Issues
   def initialize(issues_path)
     @issues = JSON.parse(IO.read(issues_path)).map{|hash| Issue.new(hash)}
+    @lables = fetch_lables_from_issues()
+  end
+
+  def fetch_lables_from_issues
+    lables = Set[]
+    @issues.each do |issue|
+      lables.merge(issue.lables)
+    end
+    lables.to_a
   end
 
   def timeline
@@ -52,6 +62,10 @@ class Issues
   def timestamps
     @timestamps ||= @issues.map {|i| [i.created_at, i.closed_at]}.flatten.compact.sort.uniq
   end
+
+  def lables
+    @lables
+  end
 end
 
 class Issue
@@ -84,5 +98,44 @@ class Issue
     return :unborn if timestamp < created_at
     return :closed if closed_at && (closed_at < timestamp)
     return :open
+  end
+
+  def lables
+    lables = Set[]
+    lable_hashes = @hash['labels']
+    lable_hashes.each do |lable_hash|
+      lables.add(Lable.new(lable_hash))
+    end
+    return lables
+  end
+end
+
+class Lable
+  def initialize(hash)
+    @id = hash['id']
+    @name = hash['name']
+    @color = hash['color']
+  end
+
+  def eql?(other)
+    if other.respond_to?(:id)
+      return self.id == other.id
+    end
+  end
+
+  def id
+    return @id
+  end
+
+  def name
+    return @name
+  end
+
+  def color
+    return @color
+  end
+
+  def hash
+    return @id.hash
   end
 end
