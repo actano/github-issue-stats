@@ -9,12 +9,17 @@ class Issues
   def timeline
     timeline = []
     timestamps.each do |timestamp|
-      status = {unborn: 0, open: 0, closed: 0}
+      status_counter = {unborn: 0, open: 0, closed: 0}
+      active_counter = {dontcare: 0, active: 0, stale: 0}
 
       # Calculate a lead time sample for issues closed at this timestamp
       lead_time_issues = []
       @issues.each do |issue|
-        status[issue.status(timestamp)] += 1
+        status = issue.status(timestamp)
+        status_counter[status] += 1
+        if status == :open
+            active_counter[issue.is_stale] += 1
+        end
         if issue.closed_at == timestamp
           lead_time_issues << issue
         end
@@ -22,17 +27,17 @@ class Issues
       if lead_time_issues.any?
         lead_time_sum = lead_time_issues.map(&:lead_time).inject(0.0) { |sum, lt| sum + lt}
         lead_time_sample = lead_time_sum / lead_time_issues.size
-        status[:lead_time_sample] = lead_time_sample
-        status[:closed_issues] = lead_time_issues.map(&:number).join(',')
+        status_counter[:lead_time_sample] = lead_time_sample
+        status_counter[:closed_issues] = lead_time_issues.map(&:number).join(',')
       end
 
-      entry = [timestamp, status.dup]
+      entry = [timestamp, status_counter.dup, active_counter.dup]
       timeline << entry
 
       time_where_total_count_like_closed = nil
       timeline.each do |past|
         total_count = past[1][:open] +  past[1][:closed]
-        if total_count >= status[:closed]
+        if total_count >= status_counter[:closed]
           time_where_total_count_like_closed = past[0]
           break
         end
@@ -68,6 +73,11 @@ class Issue
 
   def lead_time
     @closed_at ? closed_at - created_at : nil
+  end
+
+  def is_stale
+    return :active if @hash['assignee']
+    return :stale
   end
 
   def status(timestamp)

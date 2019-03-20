@@ -8,7 +8,7 @@ end
 
 issues = Issues.new(ARGV[0])
 
-puts "timestamp\tclosed\topen\tlead_time\tlead_time_sample\tclosed_issues"
+puts "timestamp\tclosed\topen\tlead_time\tlead_time_sample\tclosed_issues\tactive_tasks\tstale_tasks"
 issues.timeline.each do |t|
   open = t[1][:open]
   closed = t[1][:closed]
@@ -19,6 +19,9 @@ issues.timeline.each do |t|
 
   closed_issues = t[1][:closed_issues]
 
-  puts "#{t[0].iso8601}\t#{closed}\t#{open}\t#{lead_time_days}\t#{lead_time_sample_days}\t#{closed_issues}"
+  active_tasks = t[2][:active]
+  stale_tasks = t[2][:stale]
+
+  puts "#{t[0].iso8601}\t#{closed}\t#{open}\t#{lead_time_days}\t#{lead_time_sample_days}\t#{closed_issues}\t#{active_tasks}\t#{stale_tasks}"
   [t[0].iso8601, closed, open, "%.1f" % lead_time_days]
 end
