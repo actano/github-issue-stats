@@ -5,9 +5,9 @@ require 'ghis'
 
 def headline(issues)
   result = "timestamp"
-  issues.lables.each do |lable|
+  issues.labels.each do |label|
     result.concat("\t")
-    result.concat(lable.name)
+    result.concat(label.name)
   end
   return result
 end

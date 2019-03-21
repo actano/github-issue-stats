@@ -5,15 +5,15 @@ require 'set'
 class Issues
   def initialize(issues_path)
     @issues = JSON.parse(IO.read(issues_path)).map{|hash| Issue.new(hash)}
-    @lables = fetch_lables_from_issues()
+    @labels = fetch_labels_from_issues()
   end
 
-  def fetch_lables_from_issues
-    lables = Set[]
+  def fetch_labels_from_issues
+    labels = Set[]
     @issues.each do |issue|
-      lables.merge(issue.lables)
+      labels.merge(issue.labels)
     end
-    lables.to_a
+    labels.to_a
   end
 
   def timeline
@@ -21,6 +21,10 @@ class Issues
     timestamps.each do |timestamp|
       status_counter = {unborn: 0, open: 0, closed: 0}
       active_counter = {dontcare: 0, active: 0, stale: 0}
+      label_counter = {}
+      @labels.each do |label|
+        label_counter[label] = 0
+      end
 
       # Calculate a lead time sample for issues closed at this timestamp
       lead_time_issues = []
@@ -64,7 +68,7 @@ class Issues
   end
 
   def lables
-    @lables
+    @labels
   end
 end
 
@@ -100,13 +104,13 @@ class Issue
     return :open
   end
 
-  def lables
-    lables = Set[]
-    lable_hashes = @hash['labels']
-    lable_hashes.each do |lable_hash|
-      lables.add(Lable.new(lable_hash))
+  def labels
+    labels = Set[]
+    label_hashes = @hash['labels']
+    label_hashes.each do |label_hash|
+      labels.add(Lable.new(label_hash))
     end
-    return lables
+    return labels
   end
 end
 
