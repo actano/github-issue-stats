@@ -25,7 +25,7 @@ throttled when you pull down issues with the GitHub API.
     # Or, if you prefer token auth
     export GITHUB_AUTH='-H "Authorization: token TOKEN"'
 
-Fetch a copy of GitHub issues to disk:
+Fetch a copy of GitHub issues to disk - for example those of the project cucumber/cucumber-jvm:
 
     scripts/fetch-issues cucumber/cucumber-jvm
 
