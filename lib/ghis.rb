@@ -32,7 +32,10 @@ class Issues
         status = issue.status(timestamp)
         status_counter[status] += 1
         if status == :open
-            active_counter[issue.is_stale] += 1
+          active_counter[issue.is_stale] += 1
+          issue.labels.each do |label|
+            label_counter[label] += 1
+          end
         end
         if issue.closed_at == timestamp
           lead_time_issues << issue
@@ -45,7 +48,7 @@ class Issues
         status_counter[:closed_issues] = lead_time_issues.map(&:number).join(',')
       end
 
-      entry = [timestamp, status_counter.dup, active_counter.dup]
+      entry = [timestamp, status_counter.dup, active_counter.dup, label_counter.dup]
       timeline << entry
 
       time_where_total_count_like_closed = nil
@@ -67,7 +70,7 @@ class Issues
     @timestamps ||= @issues.map {|i| [i.created_at, i.closed_at]}.flatten.compact.sort.uniq
   end
 
-  def lables
+  def labels
     @labels
   end
 end
@@ -110,7 +113,7 @@ class Issue
     label_hashes.each do |label_hash|
       labels.add(Lable.new(label_hash))
     end
-    return labels
+    labels
   end
 end
 

@@ -3,19 +3,30 @@
 
 require 'ghis'
 
-def headline(issues)
+def headline(labels)
   result = "timestamp"
-  issues.labels.each do |label|
-    result.concat("\t")
-    result.concat(label.name)
+  labels.each do |label|
+    result << "\t"
+    result << label.name
   end
   return result
 end
 
-issues = Issues.new(ARGV[0])
+def create_line(timeline_event, labels)
+  line = "#{timeline_event[0].iso8601}"
+  issue_numbers = timeline_event[3]
+  labels.each do |label|
+    line << "\t"
+    line << "#{issue_numbers[label]}"
+  end
+  line
+end
 
-puts headline(issues)
+issues = Issues.new(ARGV[0])
+labels = issues.labels
+
+puts headline(labels)
 issues.timeline.each do |t|
-  puts "#{t[0].iso8601}"
+  puts create_line(t, labels)
 end
 

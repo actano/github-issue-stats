@@ -1,0 +1,27 @@
+set xdata time
+set timefmt "%Y-%m-%dT%H:%M:%SZ"
+set datafile separator "\t"
+set terminal svg size 1000, 600 font 'Roboto,9'
+set ylabel "Issues"
+set xlabel "Date"
+
+set pointsize 0.8
+set format x "%Y"
+set border 11
+set xtics out
+set tics front
+set key below
+
+plot \
+  tsv using 1:($2+$3+$4+$5+$6+$7+$8+$9+$10+$11+$12+$13) title 'API definition' with filledcurves x1 lc rgb "#337dff", \
+  tsv using 1:($2+$3+$4+$5+$6+$7+$8+$9+$10+$11+$12) title 'Architecture decision' with filledcurves x1 lc rgb "#555500", \
+  tsv using 1:($2+$3+$4+$5+$6+$7+$8+$9+$10+$11) title 'Architecture Design' with filledcurves x1 lc rgb "#550055", \
+  tsv using 1:($2+$3+$4+$5+$6+$7+$8+$9+$10) title 'Data model' with filledcurves x1 lc rgb "#005555", \
+  tsv using 1:($2+$3+$4+$5+$6+$7+$8+$9) title 'duplicate' with filledcurves x1 lc rgb "#aaaa00", \
+  tsv using 1:($2+$3+$4+$5+$6+$7+$8) title 'Feature Request' with filledcurves x1 lc rgb "#aa00aa", \
+  tsv using 1:($2+$3+$4+$5+$6+$7) title 'Product question' with filledcurves x1 lc rgb "#00aaaa", \
+  tsv using 1:($2+$3+$4+$5+$6) title 'User interface' with filledcurves x1 lc rgb "#ffff00", \
+  tsv using 1:($2+$3+$4+$5) title 'Technology decision' with filledcurves x1 lc rgb "#ff00ff", \
+  tsv using 1:($2+$3+$4) title 'Use case' with filledcurves x1 lc rgb "#00ffff", \
+  tsv using 1:($2+$3) title 'Deployment' with filledcurves x1 lc rgb "#123456", \
+  tsv using 1:2 title 'Authorization' with filledcurves x1 lc rgb "#789abc" \
