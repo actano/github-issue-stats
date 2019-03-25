@@ -6,7 +6,7 @@ set ylabel "Issues"
 set xlabel "Date"
 
 set pointsize 0.8
-set format x "%Y"
+set format x "%m-%d"
 set border 11
 set xtics out
 set tics front
